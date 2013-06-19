@@ -1,6 +1,9 @@
 Chrome Security Extensions & Apps
 =====================
 
+**Description:** _List of Chrome Extensions and Apps that can help for web app security testing, vulnerability assessment, pentesting etc._
+
+
 **Generated:** Wed, 19 Jun 2013 18:54:11 GMT
 
 **User Agent:** Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36
