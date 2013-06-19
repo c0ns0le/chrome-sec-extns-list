@@ -1,4 +1,4 @@
-chrome-sec-extns-list
+Chrome Security Extensions & Apps
 =====================
 
 **Generated:** Wed, 19 Jun 2013 18:54:11 GMT
@@ -56,7 +56,6 @@ _Autosaves everything you type so you can easily recover from form-killing timeo
 _A developer tool for viewing and editing of the HTML5 localStorage API on a webpage_
 *   [One-Click Extensions Manager](https://chrome.google.com/webstore/detail/niemebbfnfbjfojajlmnbiikmcpjkkja) v1.3.3.9
 
-**Disabled Extensions:** 0
 
 **Apps:** 24
 
