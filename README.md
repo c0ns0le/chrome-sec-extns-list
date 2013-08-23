@@ -20,8 +20,6 @@ _Performs syntax highlighting on files visited in the browser based on thier ext
 _Export your favorite Google Chrome™ extensions as BBCode, HTML, Wiki or text list for your Blog. Share the extensions via Twitter, Google Buzz™, Google Mail™ or add them to Google Bookmarks™ lists. Also you can directly enable/disable your extensions._
 *   [Mobile Resizer](https://chrome.google.com/webstore/detail/cllkoedgiefnomcccogcalmjogjfcpji) v2.2.4
 _Preview your website with real mobile resolutions, change orientation in one click. iPad, iPhone, Android, BlackBerry..._
-*   [Local Storage Manager](https://chrome.google.com/webstore/detail/cokpmiobagccomdnepembbpelplbmnlc) v0.1
-_Good for developers, that need more controlled interaction with the local storage during development._
 *   [Site Spider](https://chrome.google.com/webstore/detail/ddlodfbcplakmddhdlffebcggbbighda) v1.2
 *   [Swap My Cookies](https://chrome.google.com/webstore/detail/dffhipnliikkblkhpjapbecpmoilcama) v0.2.2
 _If you have multiple accounts let Swap My Cookies manage them for you!_
@@ -53,6 +51,8 @@ _Complete XSS reversing/scanner tool. Find how a site is filtering code, check f
 _Google Chrome extension to inspect the security aspects of a site's HTTP headers, its cookies and other key security settings. This extension is designed for web developers and quality assurance testers who are not security experts._
 *   [Ultimate User Agent Switcher, URL sniffer](https://chrome.google.com/webstore/detail/ljfpjnehmoiabkefmnjegmpdddgcdnpo) v0.9.2.7
 _This extension can switch the user agent of a browser. and it allows you to find all HTTP URLs._
+*   [User-Agent Switcher for Chrome](https://chrome.google.com/webstore/detail/djflhoibgkdhkhhcedjiklpkjnoahfmg)
+_Spoofs & Mimics User-Agent strings._
 *   [Lazarus: Form Recovery](https://chrome.google.com/webstore/detail/loljledaigphbcpfhfmgopdkppkifgno) v3.0.5
 _Autosaves everything you type so you can easily recover from form-killing timeouts, crashes and network errors._
 *   [html5 buddy](https://chrome.google.com/webstore/detail/mepcemlliclfkppahmgdfoamhccflihc) v0.2
@@ -110,5 +110,8 @@ _Cloud9 is an online platform for development that makes developing applications
 *   [CSS3 Generator](https://chrome.google.com/webstore/detail/objoeachdkkeopnmlgablcjhifbahmbg) v2.1
 _CSS3 generator is a free  online tool to experiment with CSS3 properties and generate the stylesheet._
 
+
 Exported with [Chrome Extensions Share](https://chrome.google.com/webstore/detail/chdafcbnfkfenoeejpaeenpdamhmalhe)
+
+Online Markdown Editor [Markable](http://markable.in/editor/)
 </body></html>  
