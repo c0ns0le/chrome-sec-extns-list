@@ -1,9 +1,11 @@
-
 '''
 Created on Dec 22, 2015
 
 @author: rv279r
-
+@see:
+http://www.pythonforbeginners.com/python-on-the-web/beautifulsoup-4-python/
+http://www.crummy.com/software/BeautifulSoup/bs4/doc/
+http://stackoverflow.com/questions/11875770/how-to-overcome-datetime-datetime-not-json-serializable-in-python
 '''
 import urllib2
 from bs4 import BeautifulSoup
@@ -13,6 +15,7 @@ import pymongo
 import os
 import datetime
 import json
+from bson import json_util
 
 PROXY = 1
 LIMIT_COUNT = 2
@@ -131,8 +134,9 @@ count =1
 for storeid in idlist:
         print "\nScraping Data: " + str(count) + "\n"
         extn = scrap_info(storeid["_id"]);
-        extn['updated']= datetime.datetime.utcnow()
-        print extn
+        extn['updated']= str(datetime.datetime.utcnow())
+        #print extn
+        print json.dumps(extn, default=json_util.default)
         if count == LIMIT_COUNT:
             print "\nLimited Data Updated \n"
             break
