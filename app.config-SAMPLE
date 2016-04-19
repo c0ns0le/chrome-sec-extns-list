@@ -1,6 +1,8 @@
-
-
-PROXY = ""
+[Application-Config]
+PROXY_URL = "http://one.proxy.att.com:8080"
 DB_URL = ""
 DB_USR = ""
 DB_PASS = ""
+
+$ git config --global https.proxy
+$ git config --global http.proxy

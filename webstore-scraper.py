@@ -7,6 +7,7 @@ http://www.pythonforbeginners.com/python-on-the-web/beautifulsoup-4-python/
 http://www.crummy.com/software/BeautifulSoup/bs4/doc/
 http://stackoverflow.com/questions/11875770/how-to-overcome-datetime-datetime-not-json-serializable-in-python
 '''
+import ConfigParser
 import urllib2
 from bs4 import BeautifulSoup
 import pprint
@@ -17,12 +18,24 @@ import datetime
 import json
 from bson import json_util
 
+
 PROXY = 1
 LIMIT_COUNT = 2
 WEBSTORE_URL = "https://chrome.google.com/webstore/detail/"
 DIR = os.path.dirname(os.path.realpath(__file__))
 
+# Read from app.config file
+configParser = ConfigParser.RawConfigParser()
+configFilePath = r'app.config'
+configParser.read(configFilePath)
 
+PROXY_URL =  configParser.get('Application-Config', 'PROXY_URL')
+
+
+
+
+
+'''
 def read_json(data_file):
     read_path = os.path.join(DIR,data_file)
     json_data = json.load(open(read_path,'r'))
@@ -30,7 +43,7 @@ def read_json(data_file):
     return json_data
 
 idlist = read_json('extns.json')
-
+'''
 
 def return_text(attribute):
     """If tag exists, return the text else empty string."""
@@ -41,7 +54,7 @@ def return_text(attribute):
 
 def scrap_info(storeid):
     if PROXY == 1:
-        proxy = urllib2.ProxyHandler({'https': '<proxy>'})
+        proxy = urllib2.ProxyHandler({'https': PROXY_URL})
         opener = urllib2.build_opener(proxy)
         opener.addheaders = [('User-agent', 'Mozilla/5.0')]
         urllib2.install_opener(opener)
@@ -130,6 +143,7 @@ def insert_data():
 #os.system('clear')
 #insert_data()
 #read_data()
+'''
 count =1
 for storeid in idlist:
         print "\nScraping Data: " + str(count) + "\n"
@@ -141,3 +155,6 @@ for storeid in idlist:
             print "\nLimited Data Updated \n"
             break
         count += 1
+'''
+
+#print scrap_info('djflhoibgkdhkhhcedjiklpkjnoahfmg')
