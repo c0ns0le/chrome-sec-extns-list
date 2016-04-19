@@ -17,14 +17,16 @@ import datetime
 import json
 from bson import json_util
 
-PROXY = 1
+PROXY = 0
 LIMIT_COUNT = 2
 WEBSTORE_URL = "https://chrome.google.com/webstore/detail/"
 DIR = os.path.dirname(os.path.realpath(__file__))
 
 
 def read_json(data_file):
-    read_path = os.path.join(DIR,data_file)
+    read_path = os.path.join(*[DIR,"data",data_file])
+    print DIR
+    print read_path
     json_data = json.load(open(read_path,'r'))
 
     return json_data
@@ -107,7 +109,7 @@ def insert_data():
 
     for storeid in idlist:
         print "Scraping Data: " + str(count) + "\n"
-        extn = scrap_info(storeid);
+        extn = scrap_info(storeid["_id"]);
         extn['updated']= datetime.datetime.utcnow()
         print extn
         print "\n"
@@ -120,24 +122,31 @@ def insert_data():
             print "Unexpected error:", type(e), e
 
         if count == LIMIT_COUNT:
-            print "Limited Data Updated \n"
+            print "\nUpdate Limit Has Been Set \n"
             break
         count += 1
 
     print count, "records updated. \n"
     connection.close()
 
+
+def runScrapper():
+
+
+    count =1
+    for storeid in idlist:
+            print "\nScraping Data: " + str(count) + "\n"
+            extn = scrap_info(storeid["_id"]);
+            extn['updated']= str(datetime.datetime.utcnow())
+            #print extn
+            print json.dumps(extn, default=json_util.default)
+            if count == LIMIT_COUNT:
+                print "\nLimited Data Updated \n"
+                break
+            count += 1
+
+
 #os.system('clear')
 #insert_data()
 #read_data()
-count =1
-for storeid in idlist:
-        print "\nScraping Data: " + str(count) + "\n"
-        extn = scrap_info(storeid["_id"]);
-        extn['updated']= str(datetime.datetime.utcnow())
-        #print extn
-        print json.dumps(extn, default=json_util.default)
-        if count == LIMIT_COUNT:
-            print "\nLimited Data Updated \n"
-            break
-        count += 1
+insert_data()
