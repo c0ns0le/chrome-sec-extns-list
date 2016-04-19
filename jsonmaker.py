@@ -43,13 +43,13 @@ def read_extnload(data_file):
 
 #idlist.txt OR extn_load.md
 
-raw_data = read_extnload("idlist.txt")
+raw_data = read_extnload("extn_load.md")
 json_data = json.dumps(raw_data)
 
 
 for id, name in enumerate(d["_id"] for d in raw_data):
     print name
 
-f = open(os.path.join(DIR,'extns.json'),'w')
+f = open(os.path.join(DIR,'import.json'),'w')
 f.write(json_data)
 f.close()
