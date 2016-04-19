@@ -28,6 +28,9 @@ class MongoDB(object):
     def query(self, query):
         return self._db_cur.find(query)
 
+    def update(self,query):
+        return self._db_cur.udpate(query)
+        
     def close(self):
         self._db_connection.close()
 
