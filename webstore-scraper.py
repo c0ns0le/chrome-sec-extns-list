@@ -78,7 +78,7 @@ def scrap_info(storeid):
         print 'We failed with error code - %s.' % e.code
         return {}
 
-def read_data():
+def read_from_db():
     print "Connecting to database"
     connection = pymongo.MongoClient("mongodb://<usr>:<pwd>@ds027744.mlab.com:27744/dbdev")
     db=connection.dbdev
@@ -97,7 +97,7 @@ def read_data():
 
     connection.close()
 
-def insert_data():
+def insert_to_db():
     global LIMIT_COUNT
     count = 1
     print "Connecting to database ...\n"
@@ -148,5 +148,5 @@ def runScrapper():
 
 #os.system('clear')
 #insert_data()
-#read_data()
-insert_data()
+#read_from_db()
+insert_to_db()
