@@ -1,23 +1,25 @@
-import pymongo
-import ConfigParser, pprint
-
 """
+@author: rv279r
+@see:
 http://codereview.stackexchange.com/questions/64671/sharing-a-database-connection-with-multiple-modules
 http://programmers.stackexchange.com/questions/200522/how-to-deal-with-database-connections-in-a-python-library-module
 http://stackoverflow.com/questions/19379120/how-to-read-a-config-file-using-python
 """
 
+import ConfigParser
+import pymongo
+
 # Read from app.config file
 configParser = ConfigParser.RawConfigParser()
-configFilePath = r'app.config'
-configParser.read(configFilePath)
+CONFIGFILEPATH = r'app.config'
+configParser.read(CONFIGFILEPATH)
 
-DB_URL =  configParser.get('Application-Config', 'DB_URL')
+DB_URL = configParser.get('Application-Config', 'DB_URL')
 DB_USR = configParser.get('Application-Config', 'DB_USR')
 DB_PASS = configParser.get('Application-Config', 'DB_PASS')
 
-class MongoDB:
-    """docstring for mongoDB"""
+class MongoDB(object):
+    """Database Class"""
 
     _db_connection = None
     _db_cur = None
@@ -28,21 +30,24 @@ class MongoDB:
         self._db_cur = self._db_connection.dbdev.chromeextn
 
     def query(self, query):
+        """Query the database"""
         try:
-             cur = self._db_cur.find(query)
-             return cur
+            cur = self._db_cur.find(query)
+            return cur
         except Exception as e:
             print "Database Error:", type(e), e
             return
 
 
-    def insert(self,query,set):
+    def insert(self, storeid, setval):
+        """Insert data to database that matches specified storeid"""
         try:
-            result = self._db_cur.update(query,set,upsert=True)
+            result = self._db_cur.update(storeid, setval, upsert=True)
             return result['n']
         except Exception as e:
             print "Database Error:", type(e), e
             return
 
     def close(self):
+        """close connection to database"""
         self._db_connection.close()

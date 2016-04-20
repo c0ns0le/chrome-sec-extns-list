@@ -15,18 +15,18 @@ DIR = os.path.dirname(os.path.realpath(__file__))
 
 
 def read_extnload(data_file):
-
+    """ Read extn_load.md file and create import.json"""
     global COUNT
     return_list = []
-    read_path = os.path.join(*[DIR,"data",data_file])
+    read_path = os.path.join(*[DIR, "data", data_file])
 
-    f = open(read_path,'r')
+    f = open(read_path, 'r')
 
     for line in f:
         if COUNT == LIMIT_COUNT:
             print "Data Read Limited \n"
             break
-        id = re.search('[.*\][a-z]{32}', line)
+        id = re.search(r'[.*\][a-z]{32}', line)
         name = re.search(r'\[(.*?)\]', line)
         COUNT += 1
         temp_dict = {}
@@ -50,6 +50,6 @@ json_data = json.dumps(raw_data)
 for id, name in enumerate(d["_id"] for d in raw_data):
     print name
 
-f = open(os.path.join(*[DIR,'data','import.json']),'w')
+f = open(os.path.join(*[DIR, 'data', 'import.json']), 'w')
 f.write(json_data)
 f.close()
