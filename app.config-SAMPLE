@@ -1,0 +1,9 @@
+[Application-Config]
+PROXY_URL =
+DB_URL =
+DB_USR =
+DB_PASS =
+
+# to setup proxy in git bash
+#$ git config --global https.proxy
+#$ git config --global http.proxy

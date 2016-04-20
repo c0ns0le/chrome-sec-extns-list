@@ -6,33 +6,32 @@ Created on Dec 22, 2015
 http://www.pythonforbeginners.com/python-on-the-web/beautifulsoup-4-python/
 http://www.crummy.com/software/BeautifulSoup/bs4/doc/
 http://stackoverflow.com/questions/11875770/how-to-overcome-datetime-datetime-not-json-serializable-in-python
+
 '''
-import urllib2
 from bs4 import BeautifulSoup
-import pprint
-import sys
-import pymongo
-import os
-import datetime
-import json
+import pymongo, urllib2, pprint, sys, os, datetime, json, ConfigParser
 from bson import json_util
+from MongoDB import MongoDB
 
 PROXY = 0
-LIMIT_COUNT = 2
+LIMIT_COUNT = 0
 WEBSTORE_URL = "https://chrome.google.com/webstore/detail/"
 DIR = os.path.dirname(os.path.realpath(__file__))
 
+# Read from app.config file
+configParser = ConfigParser.RawConfigParser()
+configFilePath = r'app.config'
+configParser.read(configFilePath)
+
+PROXY_URL =  configParser.get('Application-Config', 'PROXY_URL')
 
 def read_json(data_file):
     read_path = os.path.join(*[DIR,"data",data_file])
-    print DIR
-    print read_path
     json_data = json.load(open(read_path,'r'))
-
     return json_data
 
-idlist = read_json('extns.json')
-
+def date_handler(obj):
+    return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 
 def return_text(attribute):
     """If tag exists, return the text else empty string."""
@@ -41,9 +40,9 @@ def return_text(attribute):
     else:
         return ""
 
-def scrap_info(storeid):
+def scrap_data(storeid):
     if PROXY == 1:
-        proxy = urllib2.ProxyHandler({'https': '<proxy>'})
+        proxy = urllib2.ProxyHandler({'https': PROXY_URL})
         opener = urllib2.build_opener(proxy)
         opener.addheaders = [('User-agent', 'Mozilla/5.0')]
         urllib2.install_opener(opener)
@@ -61,8 +60,9 @@ def scrap_info(storeid):
         user_count = soup.find("span", {"class" : "e-f-ih"})
         dev_website = soup.find("a", {"class" : "e-f-y"})
         webstore_id = storeid
-        chrome_extn = {'_id':webstore_id,'title':return_text(title), 'description':return_text(description),'rating':str(rating),'usercount':return_text(user_count),'website':return_text(dev_website)}
 
+        chrome_extn = {'_id':webstore_id,'title':return_text(title), 'description':return_text(description),'rating':str(rating),'usercount':return_text(user_count),'website':return_text(dev_website)}
+        return chrome_extn
         '''
         print "Title: " + return_text(title)
         print "Description: " + return_text(description)
@@ -72,81 +72,77 @@ def scrap_info(storeid):
         print "Webstore ID: " + storeid
         pprint.pprint(chrome_extn)
         '''
-        return chrome_extn
 
     except urllib2.HTTPError, e:
-        print 'We failed with error code - %s.' % e.code
-        return {}
+        print 'Scrapping Error - %s.' % e.code
+        chrome_extn = {'_id':storeid,'title':'Not Found'}
+        return chrome_extn
 
-def read_from_db():
-    print "Connecting to database"
-    connection = pymongo.MongoClient("mongodb://<usr>:<pwd>@ds027744.mlab.com:27744/dbdev")
-    db=connection.dbdev
-    extnlist = db.chromeextn
+def read_from_db(data_file):
+    global LIMIT_COUNT
+    count =1
+    json_docs = []
 
-    print "Reading Data ...\n"
+    db = MongoDB()
+    cursor = db.query({})
 
-    try:
-        cursor = extnlist.find({})
+    if cursor:
+        for doc in cursor:
+            pprint.pprint(doc)
+            json_doc = json.dumps(doc, default=json_util.default)
+            json_docs.append(json_doc)
+            if (LIMIT_COUNT != 0 and count > LIMIT_COUNT):
+                print "\nLimited IDs Read \n"
+                break
+            count += 1
 
-    except Exception as e:
-        print "Unexpected error:", type(e), e
+    db.close()
 
-    for doc in cursor:
-        pprint.pprint(doc)
+    print count-1, "Records Found. \n"
+    json_data_file = [json.loads(j_doc, object_hook=json_util.object_hook) for j_doc in json_docs]
 
-    connection.close()
+    write_path = os.path.join(*[DIR,"data",data_file])
+    with open(write_path, 'w') as outfile:
+        json.dump(json_data_file, outfile, default=date_handler,indent=4, sort_keys=True)
 
 def insert_to_db():
     global LIMIT_COUNT
     count = 1
-    print "Connecting to database ...\n"
-    connection = pymongo.MongoClient("mongodb://<usr>:<pwd>@ds027744.mlab.com:27744/dbdev")
-    db=connection.dbdev
-    extnlist = db.chromeextn
+    idlist = read_json('import.json')
 
+    db = MongoDB()
     print "Initiate Scraping for " , len(idlist) , "records ...\n\n"
 
     for storeid in idlist:
         print "Scraping Data: " + str(count) + "\n"
-        extn = scrap_info(storeid["_id"]);
+        extn = scrap_data(storeid["_id"]);
         extn['updated']= datetime.datetime.utcnow()
         print extn
-        print "\n"
-        try:
-            extnlist.update({"_id":storeid},{"$set":extn,"$setOnInsert": {"created": datetime.datetime.utcnow() }},upsert=True)
-            #extnlist.insert_one({extn_dummy})
-            print "Inserted Data: " + str(count) + "\n"
-        except Exception as e:
-            connection.close()
-            print "Unexpected error:", type(e), e
+        print "Inserted", db.insert({"_id":storeid["_id"]},{"$set":extn,"$setOnInsert": {"created": datetime.datetime.utcnow() }}), "data.\n"
 
-        if count == LIMIT_COUNT:
-            print "\nUpdate Limit Has Been Set \n"
+        if (LIMIT_COUNT != 0 and count > LIMIT_COUNT):
+            print "Update Limit Has Been Set \n"
             break
         count += 1
 
-    print count, "records updated. \n"
-    connection.close()
+    print count-1, "records updated. \n"
+    db.close()
 
-
-def runScrapper():
-
-
+def dryRunScrapper():
+    idlist = read_json('import.json')
     count =1
     for storeid in idlist:
             print "\nScraping Data: " + str(count) + "\n"
-            extn = scrap_info(storeid["_id"]);
+            extn = scrap_data(storeid["_id"]);
             extn['updated']= str(datetime.datetime.utcnow())
             #print extn
             print json.dumps(extn, default=json_util.default)
-            if count == LIMIT_COUNT:
-                print "\nLimited Data Updated \n"
+
+            if (LIMIT_COUNT != 0 and count > LIMIT_COUNT):
+                print "\nLimited IDs Scrapped \n"
                 break
             count += 1
 
 
-#os.system('clear')
-#insert_data()
-#read_from_db()
-insert_to_db()
+#insert_to_db()
+read_from_db('export.json')

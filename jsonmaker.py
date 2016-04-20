@@ -50,6 +50,6 @@ json_data = json.dumps(raw_data)
 for id, name in enumerate(d["_id"] for d in raw_data):
     print name
 
-f = open(os.path.join(*[DIR,'data','extns.json']),'w')
+f = open(os.path.join(*[DIR,'data','import.json']),'w')
 f.write(json_data)
 f.close()
